@@ -1,0 +1,33 @@
+name: CI Pipeline
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Tests
+    runs-on: ubuntu-latest 
+
+    steps:
+      # The repository code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      #  Python
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.13.1" 
+
+      # dependencies
+      - name: Install requirements
+        run: |
+          pip install -r requirements.txt  # Install dependencies from requirements.txt
+          pip install pytest              # Install pytest if not in requirements.txt
+
+      # Run pytest
+      - name: tests
+        run: |
+          pytest
