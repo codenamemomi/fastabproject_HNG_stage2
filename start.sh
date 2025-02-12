@@ -5,16 +5,17 @@ echo "Current working directory:"
 pwd
 
 # Ensure required directories exist
-sudo mkdir -p /run /tmp
+sudo mkdir -p /run /tmp /var/run/nginx
+sudo chmod 755 /run /var/run/nginx
 
-# Fix permissions for /run
-sudo chmod 755 /run
+# Fix ownership to avoid permission issues
+sudo chown $(whoami) /run/nginx.pid /var/run/nginx
 
 # Create log files and set correct permissions
 sudo touch /tmp/nginx_access.log /tmp/nginx_error.log
 sudo chmod 666 /tmp/nginx_access.log /tmp/nginx_error.log
 
-# Stop any running Nginx instances (ignores errors if none are running)
+# Stop any running Nginx instances
 echo "Stopping any existing Nginx instances..."
 sudo nginx -s stop || true  
 
@@ -26,13 +27,12 @@ sudo rm -f /etc/nginx/nginx.conf /etc/nginx/sites-enabled/default
 echo "Applying custom Nginx configuration..."
 sudo cp "$(pwd)/nginx/nginx.conf" /etc/nginx/nginx.conf
 
-# Start Nginx with custom config
+# Start Nginx with explicit PID file location
 echo "Starting Nginx..."
-sudo nginx -c /etc/nginx/nginx.conf -g "daemon off;" &
+sudo nginx -c /etc/nginx/nginx.conf -p /var/run/nginx/ -g "pid /run/nginx.pid; daemon off;" &
 
 # Wait for Nginx to start
 sleep 2
 
 # Start FastAPI
-echo "Starting FastAPI..."
-uvicorn main:app --host 0.0.0.0 --port 8000
+echo "Starting
