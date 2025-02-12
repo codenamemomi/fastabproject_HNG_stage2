@@ -7,11 +7,11 @@ pwd
 # Ensure /tmp directory exists
 mkdir -p /tmp
 
-# Ensure log files can be written
+# Create log files if they don't exist and set correct permissions
 touch /tmp/nginx_access.log /tmp/nginx_error.log
 chmod 666 /tmp/nginx_access.log /tmp/nginx_error.log
 
-# Force Nginx to use your custom configuration
+# Ensure Nginx uses the correct config file
 echo "Starting Nginx with custom config..."
 nginx -c "$(pwd)/nginx/nginx.conf" &
 
