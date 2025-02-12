@@ -10,6 +10,9 @@ echo "Removing default Nginx config..."
 rm -f /etc/nginx/nginx.conf  # Remove the default config
 cp nginx.conf /etc/nginx/nginx.conf  # Use our custom config
 
+echo "Ensuring /tmp/nginx.pid does not exist..."
+rm -f /tmp/nginx.pid  # Delete old PID file if it exists
+
 echo "Starting Nginx..."
 nginx -g "daemon off;" &  # Start in the background
 
