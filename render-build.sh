@@ -1,4 +1,3 @@
-#!/bin/bash
 
 echo "Installing dependencies..."
 pip install --no-cache-dir -r requirements.txt  # Install FastAPI dependencies
