@@ -4,7 +4,7 @@ echo "Current working directory:"
 pwd
 
 # Create tmp directory if it doesn't exist
-mkdir -p /home/runner/work/fastabproject_HNG_stage2/tmp
+mkdir -p /tmp
 
 # Start Nginx
 nginx -c ./nginx/nginx.conf
