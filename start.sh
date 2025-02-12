@@ -14,7 +14,7 @@ echo "Ensuring /tmp/nginx.pid does not exist..."
 rm -f /tmp/nginx.pid  # Delete old PID file if it exists
 
 echo "Starting Nginx..."
-nginx -g "daemon off;" &  # Start in the background
+nginx -g "pid /tmp/nginx.pid; daemon off;" &  # Explicitly set the PID file
 
 echo "Starting FastAPI..."
 uvicorn main:app --host 0.0.0.0 --port 8000
