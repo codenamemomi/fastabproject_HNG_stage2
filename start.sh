@@ -1,6 +1,5 @@
 #!/bin/bash
 
-# Print current working directory
 echo "Current working directory:"
 pwd
 
@@ -9,16 +8,14 @@ mkdir -p /run /tmp /var/run/nginx
 chmod 755 /run /var/run/nginx
 
 # Create the Nginx PID file if it doesn't exist
-touch /run/nginx.pid  
-
-# Fix ownership only if the file exists
-if [ -f "/run/nginx.pid" ]; then
-    chown $(whoami) /run/nginx.pid
+if [ ! -f "/run/nginx.pid" ]; then
+    echo "Creating /run/nginx.pid..."
+    touch /run/nginx.pid
 fi
 
-# Create log files and set correct permissions
-touch /tmp/nginx_access.log /tmp/nginx_error.log
-chmod 666 /tmp/nginx_access.log /tmp/nginx_error.log
+# Make sure PID file is not empty before using it
+echo "Ensuring Nginx PID file is valid..."
+echo "12345" > /run/nginx.pid  # Dummy value, Nginx will overwrite this
 
 # Stop any running Nginx instances
 echo "Stopping any existing Nginx instances..."
