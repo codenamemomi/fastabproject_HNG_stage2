@@ -6,8 +6,12 @@ echo "Current working directory: $(pwd)"
 echo "Stopping any existing Nginx instances..."
 nginx -s stop || echo "No running Nginx process found."
 
+echo "Removing default Nginx config..."
+rm -f /etc/nginx/nginx.conf  # Remove the default config
+cp nginx.conf /etc/nginx/nginx.conf  # Use our custom config
+
 echo "Starting Nginx..."
-nginx -g "daemon off;" &  # Run Nginx in the background
+nginx -g "daemon off;" &  # Start in the background
 
 echo "Starting FastAPI..."
 uvicorn main:app --host 0.0.0.0 --port 8000
