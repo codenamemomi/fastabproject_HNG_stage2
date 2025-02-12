@@ -11,13 +11,21 @@ mkdir -p /tmp
 touch /tmp/nginx_access.log /tmp/nginx_error.log
 chmod 666 /tmp/nginx_access.log /tmp/nginx_error.log
 
-# Stop any existing Nginx instances
+# Stop any running Nginx processes
 echo "Stopping any existing Nginx instances..."
 sudo nginx -s stop || true  # Ignore errors if Nginx isn't running
 
-# Start Nginx with the correct config
-echo "Starting Nginx with custom config..."
-nginx -c "$(pwd)/nginx/nginx.conf" -g "daemon off;" &
+# Manually remove default config files (IMPORTANT)
+echo "Removing default Nginx configs..."
+sudo rm -f /etc/nginx/nginx.conf /etc/nginx/sites-enabled/default
+
+# Copy and force usage of your custom Nginx config
+echo "Applying custom Nginx configuration..."
+sudo cp "$(pwd)/nginx/nginx.conf" /etc/nginx/nginx.conf
+
+# Start Nginx with your custom config
+echo "Starting Nginx..."
+sudo nginx -c /etc/nginx/nginx.conf -g "daemon off;" &
 
 # Wait for Nginx to start
 sleep 2
