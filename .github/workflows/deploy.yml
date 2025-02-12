@@ -8,7 +8,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -23,28 +22,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Install Nginx
-        run: |
-          sudo apt update
-          sudo apt install -y nginx
+      - name: Make scripts executable
+        run: chmod +x start.sh render-build.sh
 
-      - name: Verify Nginx Installation
-        run: |
-          nginx -v
-
-      - name: Set executable permission for start.sh
-        run: chmod +x start.sh
-
-      - name: Execute start.sh
-        run: |
-          echo "Starting the application..."
-          ./start.sh
+      - name: Run Render build script
+        run: ./render-build.sh
 
       - name: Deploy to Render
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
         run: |
-          curl -X POST https://api.render.com/deploy/svc_your_actual_service_id \
+          curl -X POST https://api.render.com/deploy/svc_your_service_id \
           -H "Authorization: Bearer $RENDER_API_KEY" \
           -H "Content-Type: application/json" \
           -d '{"branch": "main"}'
