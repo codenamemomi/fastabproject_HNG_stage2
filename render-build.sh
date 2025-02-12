@@ -1,11 +1,10 @@
 #!/bin/bash
 
 echo "Installing dependencies..."
-pip install --no-cache-dir -r requirements.txt  # Ensure Uvicorn is installed
+pip install --no-cache-dir -r requirements.txt  # Install FastAPI dependencies
 
-echo "Building Nginx Docker Image..."
-docker build -t my-nginx .
+echo "Making start.sh executable..."
+chmod +x start.sh
 
 echo "Running start.sh..."
-chmod +x start.sh
 ./start.sh
