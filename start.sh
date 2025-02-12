@@ -1,4 +1,8 @@
 
+# Print current working directory
+echo "Current working directory:"
+pwd
+
 # Start Nginx
 nginx -c ./nginx/nginx.conf
 
