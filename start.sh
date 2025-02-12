@@ -8,8 +8,12 @@ pwd
 sudo mkdir -p /run /tmp /var/run/nginx
 sudo chmod 755 /run /var/run/nginx
 
-# Fix ownership to avoid permission issues
-sudo chown $(whoami) /run/nginx.pid /var/run/nginx
+# Create the Nginx PID file if it doesn't exist
+sudo touch /run/nginx.pid  
+
+if [ -f "/run/nginx.pid" ]; then
+    sudo chown $(whoami) /run/nginx.pid
+fi
 
 sudo touch /tmp/nginx_access.log /tmp/nginx_error.log
 sudo chmod 666 /tmp/nginx_access.log /tmp/nginx_error.log
@@ -24,10 +28,11 @@ echo "Applying custom Nginx configuration..."
 sudo cp "$(pwd)/nginx/nginx.conf" /etc/nginx/nginx.conf
 
 echo "Starting Nginx..."
-sudo nginx -c /etc/nginx/nginx.conf -p /var/run/nginx/ -g "pid /run/nginx.pid; daemon off;" &
+sudo nginx -c /etc/nginx/nginx.conf -g "pid /run/nginx.pid; daemon off;" &
 
 # Wait for Nginx to start
 sleep 2
 
 # Start FastAPI
-echo "Starting
+echo "Starting FastAPI..."
+uvicorn main:app --host 0.0.0.0 --port 8000
