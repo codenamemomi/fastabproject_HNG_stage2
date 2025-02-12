@@ -1,6 +1,9 @@
 FROM nginx:latest
 
-# Remove default Nginx configs that might be overriding ours
+# Print installed packages (debugging)
+RUN apt update && apt list --installed > /installed_packages.txt
+
+# Remove default Nginx configs (if necessary)
 RUN rm -rf /etc/nginx/conf.d/*
 
 # Copy custom Nginx configuration
