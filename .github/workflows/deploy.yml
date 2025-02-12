@@ -31,7 +31,13 @@ jobs:
         run: |
           chmod +x start.sh
           
+      - name: List files in current directory
+        run: |
+          echo "Listing files in current directory:"
+          ls -l
+          
       - name: Execute start.sh
+
 
         run: |
           echo "Starting the application"
