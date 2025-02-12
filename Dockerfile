@@ -1,11 +1,12 @@
-# Use official Nginx as base image
 FROM nginx:latest
+
+# Remove default Nginx configs that might be overriding ours
+RUN rm -rf /etc/nginx/conf.d/*
 
 # Copy custom Nginx configuration
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
-COPY nginx/mime.types /etc/nginx/mime.types  
 
-# Set permissions (Fix Render permissions issue)
+# Set permissions to prevent Render permission issues
 RUN chmod -R 755 /etc/nginx/
 
 # Expose the correct port for Render

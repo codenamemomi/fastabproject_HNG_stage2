@@ -4,7 +4,6 @@ echo "Starting the application..."
 echo "Current working directory: $(pwd)"
 
 echo "Starting Nginx..."
-nginx -c $(pwd)/nginx/nginx.conf -g "daemon off;" &
 
 
 echo "Starting FastAPI..."
