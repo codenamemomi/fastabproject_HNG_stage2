@@ -36,7 +36,13 @@ jobs:
           echo "Listing files in current directory:"
           ls -l
           
+      - name: List files in current directory
+        run: |
+          echo "Listing files in current directory:"
+          ls -l
+          
       - name: Execute start.sh
+
 
 
         run: |
