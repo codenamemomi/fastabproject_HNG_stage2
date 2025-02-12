@@ -25,6 +25,15 @@ jobs:
       - name: Make scripts executable
         run: chmod +x start.sh render-build.sh
 
+      - name: Check if nginx.conf exists
+        run: |
+          if [ ! -f nginx.conf ]; then
+            echo "❌ ERROR: nginx.conf is missing!"
+            exit 1
+          else
+            echo "✅ nginx.conf found!"
+          fi
+
       - name: Run Render build script
         run: ./render-build.sh
 
