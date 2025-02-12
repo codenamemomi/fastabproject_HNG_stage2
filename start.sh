@@ -15,8 +15,11 @@ fi
 echo "Ensuring /tmp/nginx.pid does not exist..."
 rm -f /tmp/nginx.pid  # Remove old PID file if it exists
 
+echo "Copying nginx.conf to /etc/nginx/ (if allowed)..."
+cp ./nginx/nginx.conf /etc/nginx/nginx.conf || echo "Skipping copy, no permission."
+
 echo "Starting Nginx..."
-nginx -c $(pwd)/nginx/nginx.conf -g "pid /tmp/nginx.pid; daemon off;" &  # Use correct path
+nginx -c $(pwd)/nginx/nginx.conf -g "daemon off;" &  # Use correct path
 
 echo "Starting FastAPI..."
 uvicorn main:app --host 0.0.0.0 --port 8000
