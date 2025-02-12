@@ -27,7 +27,12 @@ jobs:
           echo "Checking for start.sh"
           ls -l
           
+      - name: Set executable permission for start.sh
+        run: |
+          chmod +x start.sh
+          
       - name: Execute start.sh
+
         run: |
           echo "Starting the application"
           ./start.sh
