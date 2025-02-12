@@ -8,6 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -15,45 +16,35 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.13.1'
+          python-version: '3.11'  # Use a stable version
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Check for start.sh
+      - name: Install Nginx
         run: |
-          echo "Checking for start.sh"
-          ls -l
-          
+          sudo apt update
+          sudo apt install -y nginx
+
+      - name: Verify Nginx Installation
+        run: |
+          nginx -v
+
       - name: Set executable permission for start.sh
-        run: |
-          chmod +x start.sh
-          
-      - name: List files in current directory
-        run: |
-          echo "Listing files in current directory:"
-          ls -l
-          
-          
+        run: chmod +x start.sh
+
       - name: Execute start.sh
-
-
-
-
-
         run: |
-          echo "Starting the application"
+          echo "Starting the application..."
           ./start.sh
-          
+
       - name: Deploy to Render
-
-
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
         run: |
-          curl -X POST https://api.render.com/deploy/svc_your_service_id \
+          curl -X POST https://api.render.com/deploy/svc_your_actual_service_id \
           -H "Authorization: Bearer $RENDER_API_KEY" \
           -H "Content-Type: application/json" \
           -d '{"branch": "main"}'
