@@ -7,17 +7,13 @@ pwd
 # Ensure /tmp directory exists
 mkdir -p /tmp
 
-# Ensure nginx.conf is properly placed
-echo "Copying custom Nginx configuration..."
-sudo cp ./nginx/nginx.conf /etc/nginx/nginx.conf
-
 # Ensure log files can be written
 touch /tmp/nginx_access.log /tmp/nginx_error.log
 chmod 666 /tmp/nginx_access.log /tmp/nginx_error.log
 
-# Start Nginx in the background with the correct config
-echo "Starting Nginx..."
-nginx -c /etc/nginx/nginx.conf &
+# Force Nginx to use your custom configuration
+echo "Starting Nginx with custom config..."
+nginx -c "$(pwd)/nginx/nginx.conf" &
 
 # Wait for Nginx to start
 sleep 2
