@@ -27,7 +27,13 @@ jobs:
           echo "Checking for start.sh"
           ls -l
           
+      - name: Execute start.sh
+        run: |
+          echo "Starting the application"
+          ./start.sh
+          
       - name: Deploy to Render
+
 
         env:
           RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
