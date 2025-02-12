@@ -7,13 +7,17 @@ pwd
 # Ensure /tmp directory exists
 mkdir -p /tmp
 
-# Create log files if they don't exist and set correct permissions
+# Create log files and set correct permissions
 touch /tmp/nginx_access.log /tmp/nginx_error.log
 chmod 666 /tmp/nginx_access.log /tmp/nginx_error.log
 
-# Ensure Nginx uses the correct config file
+# Stop any existing Nginx instances
+echo "Stopping any existing Nginx instances..."
+sudo nginx -s stop || true  # Ignore errors if Nginx isn't running
+
+# Start Nginx with the correct config
 echo "Starting Nginx with custom config..."
-nginx -c "$(pwd)/nginx/nginx.conf" &
+nginx -c "$(pwd)/nginx/nginx.conf" -g "daemon off;" &
 
 # Wait for Nginx to start
 sleep 2
