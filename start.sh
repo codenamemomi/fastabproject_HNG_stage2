@@ -1,4 +1,3 @@
-#!/bin/bash
 
 # Start Nginx
 nginx -c /app/nginx/nginx.conf
