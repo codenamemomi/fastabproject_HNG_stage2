@@ -27,7 +27,7 @@ jobs:
 
       - name: Check if nginx.conf exists
         run: |
-          if [ ! -f nginx.conf ]; then
+          if [ ! -f "./nginx/nginx.conf" ]; then
             echo "❌ ERROR: nginx.conf is missing!"
             exit 1
           else
