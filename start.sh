@@ -4,24 +4,15 @@ echo "Current working directory:"
 pwd
 
 # Ensure /tmp exists for logs
-mkdir -p /tmp
+mkdir -p /tmp/nginx_logs
 
-# Stop any existing Nginx processes
+# Kill any existing Nginx processes
 echo "Stopping any existing Nginx instances..."
-nginx -s stop || echo "No running Nginx process found."
+pkill nginx || echo "No running Nginx process found."
 
-# Remove default Nginx configs
-echo "Removing default Nginx configs..."
-rm -f /etc/nginx/nginx.conf
-rm -f /etc/nginx/sites-enabled/default
-
-# Apply custom Nginx configuration
-echo "Applying custom Nginx configuration..."
-cp ./nginx/nginx.conf /etc/nginx/nginx.conf
-
-# Start Nginx
+# Start a local Nginx instance
 echo "Starting Nginx..."
-nginx
+nginx -c $(pwd)/nginx/nginx.conf -p $(pwd)/nginx/
 
 # Start FastAPI
 echo "Starting FastAPI..."
