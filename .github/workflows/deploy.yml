@@ -22,8 +22,8 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker build -t codenamemomi/fastapi-nginx:latest .
-          docker push codenamemomi/fastapi-nginx:latest
+          docker build -t codenamemomi/fastapi:latest .
+          docker push codenamemomi/fastapi:latest
 
       - name: Deploy to Koyeb
         run: |
