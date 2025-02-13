@@ -1,14 +1,22 @@
-FROM nginx:latest
+FROM python:3.11-slim AS base
 
-RUN apt update && apt list --installed > /installed_packages.txt
+# Install system dependencies
+RUN apt-get update && apt-get install -y nginx && rm -rf /var/lib/apt/lists/*
 
-RUN rm -rf /etc/nginx/conf.d/*
+# Set the working directory
+WORKDIR /app
 
-COPY nginx/nginx.conf /etc/nginx/nginx.conf
+# Copy application files
+COPY . /app
 
-RUN chmod -R 755 /etc/nginx/
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-EXPOSE 10000
+# Copy Nginx config
+COPY nginx.conf /etc/nginx/nginx.conf
 
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Expose necessary ports
+EXPOSE 80
+
+# Start Nginx and FastAPI
+CMD ["/bin/bash", "-c", "nginx -g 'daemon off;' & uvicorn main:app --host 0.0.0.0 --port 8000"]
