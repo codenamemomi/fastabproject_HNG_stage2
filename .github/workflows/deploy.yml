@@ -1,4 +1,4 @@
-name: Deployment
+name: CD Pipeline
 
 on:
   push:
@@ -11,23 +11,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Log in to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-
-      - name: Build and Push Docker Image
+      - name: Set up SSH Key
         run: |
-          docker build -t codenamemomi/fastapi:latest .
-          docker push codenamemomi/fastapi:latest
+          echo "${{ secrets.AWS_PRIVATE_KEY }}" > aws_key.pem
+          chmod 600 aws_key.pem
 
-      - name: Deploy to Koyeb
+      - name: Deploy to EC2
         run: |
-          curl -X POST "https://app.koyeb.com/v1/apps/YOUR_APP_ID/deployments" \
-          -H "Authorization: Bearer ${{ secrets.KOYEB_API_TOKEN }}" \
-          -H "Content-Type: application/json" \
-          -d '{}'
+          ssh -o StrictHostKeyChecking=no -i aws_key.pem jaaz@52.35.34.186 << 'EOF'
+          cd fastabproject_HNG_stage2
+          git pull origin main
+          source venv/bin/activate
+          pip install -r requirements.txt
+          sudo systemctl restart nginx
+          pkill -f uvicorn || true
+          nohup ./start.sh > fastapi.log 2>&1 &
+          EOF
