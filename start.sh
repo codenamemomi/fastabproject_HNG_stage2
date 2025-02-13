@@ -10,4 +10,3 @@ while ! curl -s http://127.0.0.1:8000/healthcheck; do
 done
 
 echo "Starting Nginx..."
-nginx -g "daemon off;"
