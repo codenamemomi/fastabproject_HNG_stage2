@@ -1,32 +1,23 @@
-name: CD Pipeline
-
+name: deploy
 on:
   push:
     branches:
-      - main
-
+      - main # Change to your deployment branch
 jobs:
   deploy:
-    name: Deploy
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up SSH Key
-        run: |
-          echo "${{ secrets.AWS_PRIVATE_KEY }}" > aws_key.pem
-          chmod 600 aws_key.pem
-
-      - name: Deploy to EC2
-        run: |
-          ssh -o StrictHostKeyChecking=no -i aws_key.pem jaaz@52.35.34.186 << 'EOF'
-          cd fastabproject_HNG_stage2
-          git pull origin main
-          source venv/bin/activate
-          pip install -r requirements.txt
-          sudo systemctl restart nginx
-          pkill -f uvicorn || true
-          nohup ./start.sh > fastapi.log 2>&1 &
-          EOF
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Deploy to Server
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/ubuntu/fastapi-book-project
+            git pull origin main
+            source env/bin/activate
+            pip install -r requirements.txt
+            sudo systemctl restart fastapi
